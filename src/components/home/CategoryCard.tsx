@@ -14,7 +14,7 @@ export default function CategoryCard({ category }: CategoryCardProps) {
       to={`/category/${category.id}`}
       className="block rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-400"
     >
-      <Card className="transition hover:border-neutral-300 hover:shadow-md active:scale-[0.99] dark:hover:border-neutral-700">
+      <Card className="transition-all duration-300 hover:border-violet-300/60 hover:shadow-[0_0_28px_-8px_rgba(124,58,237,0.35)] active:scale-[0.99] dark:hover:border-cyan-400/40 dark:hover:shadow-[0_0_28px_-8px_rgba(34,211,238,0.3)]">
         <div className="flex items-center justify-between gap-4">
           <div>
             <h2 className="text-lg font-semibold">{category.nameHe}</h2>

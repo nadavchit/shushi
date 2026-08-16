@@ -37,3 +37,98 @@ body {
 .animate-fade-in-up {
   animation: fade-in-up 0.25s ease-out;
 }
+
+@keyframes aurora-drift-1 {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-14px, 12px) scale(1.15);
+  }
+}
+
+@keyframes aurora-drift-2 {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(16px, -10px) scale(1.1);
+  }
+}
+
+@keyframes aurora-drift-3 {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(-40%, -60%) scale(1.2);
+    opacity: 0.9;
+  }
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 20px -4px rgba(139, 92, 246, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 32px -2px rgba(6, 182, 212, 0.35);
+  }
+}
+
+@keyframes ken-burns {
+  0% {
+    transform: scale(1) translate(0, 0);
+  }
+  100% {
+    transform: scale(1.12) translate(-1%, -1%);
+  }
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+.animate-aurora-1 {
+  animation: aurora-drift-1 16s ease-in-out infinite;
+}
+
+.animate-aurora-2 {
+  animation: aurora-drift-2 20s ease-in-out infinite;
+}
+
+.animate-aurora-3 {
+  animation: aurora-drift-3 24s ease-in-out infinite;
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 6s ease-in-out infinite;
+}
+
+.animate-ken-burns {
+  animation: ken-burns 20s ease-in-out infinite alternate;
+}
+
+.animate-gradient-shift {
+  animation: gradient-shift 6s linear infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-aurora-1,
+  .animate-aurora-2,
+  .animate-aurora-3,
+  .animate-glow-pulse,
+  .animate-ken-burns,
+  .animate-gradient-shift {
+    animation: none;
+  }
+}
