@@ -31,15 +31,17 @@ export function gradeAnswer(
 
 export function buildAttempt(params: {
   categoryId: string
+  testId: string
   mode: TestMode
   timerScope?: TimerScope
   durationSeconds: number
   answers: AnswerRecord[]
 }): Attempt {
-  const { categoryId, mode, timerScope, durationSeconds, answers } = params
+  const { categoryId, testId, mode, timerScope, durationSeconds, answers } = params
   return {
     id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     categoryId,
+    testId,
     dateISO: new Date().toISOString(),
     mode,
     timerScope,

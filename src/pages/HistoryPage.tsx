@@ -1,12 +1,16 @@
 import { useMemo } from "react"
 import { loadHistory } from "../lib/storage"
-import { categoryRegistry, getCategory } from "../data/categoryRegistry"
+import { categoryRegistry, getCategory, getTest } from "../data/categoryRegistry"
 import type { Attempt } from "../types/history"
 import CategoryStats from "../components/history/CategoryStats"
 import HistoryList from "../components/history/HistoryList"
 
 function categoryNameOf(categoryId: string): string {
   return getCategory(categoryId)?.nameHe ?? categoryId
+}
+
+function testNameOf(categoryId: string, testId: string): string {
+  return getTest(categoryId, testId)?.nameHe ?? testId
 }
 
 export default function HistoryPage() {
@@ -46,7 +50,7 @@ export default function HistoryPage() {
 
       <div>
         <h2 className="mb-4 text-xl font-bold">ניסיונות אחרונים</h2>
-        <HistoryList attempts={history} categoryNameOf={categoryNameOf} />
+        <HistoryList attempts={history} categoryNameOf={categoryNameOf} testNameOf={testNameOf} />
       </div>
     </div>
   )

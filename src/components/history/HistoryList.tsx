@@ -4,6 +4,7 @@ import Card from "../ui/Card"
 interface HistoryListProps {
   attempts: Attempt[]
   categoryNameOf: (categoryId: string) => string
+  testNameOf: (categoryId: string, testId: string) => string
 }
 
 function formatDate(iso: string): string {
@@ -15,7 +16,7 @@ function formatDate(iso: string): string {
   })
 }
 
-export default function HistoryList({ attempts, categoryNameOf }: HistoryListProps) {
+export default function HistoryList({ attempts, categoryNameOf, testNameOf }: HistoryListProps) {
   return (
     <div className="flex flex-col gap-2">
       {attempts.map((attempt) => {
@@ -24,7 +25,9 @@ export default function HistoryList({ attempts, categoryNameOf }: HistoryListPro
         return (
           <Card key={attempt.id} className="flex items-center justify-between py-3">
             <div>
-              <p className="font-medium">{categoryNameOf(attempt.categoryId)}</p>
+              <p className="font-medium">
+                {categoryNameOf(attempt.categoryId)} · {testNameOf(attempt.categoryId, attempt.testId)}
+              </p>
               <p className="text-xs text-neutral-500 dark:text-neutral-400">
                 {formatDate(attempt.dateISO)} · {attempt.mode === "timed" ? "מתוזמן" : "תרגול חופשי"}
               </p>

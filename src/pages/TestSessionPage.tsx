@@ -1,6 +1,6 @@
 import { useRef, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import { getCategory } from "../data/categoryRegistry"
+import { getCategory, getTest } from "../data/categoryRegistry"
 import type { TestSettings } from "../types/category"
 import type { Question } from "../types/question"
 import type { AnswerRecord } from "../types/history"
@@ -18,9 +18,10 @@ import Button from "../components/ui/Button"
 type Phase = "settings" | "active"
 
 export default function TestSessionPage() {
-  const { categoryId } = useParams()
+  const { categoryId, testId } = useParams()
   const navigate = useNavigate()
   const category = categoryId ? getCategory(categoryId) : undefined
+  const test = categoryId && testId ? getTest(categoryId, testId) : undefined
 
   const [phase, setPhase] = useState<Phase>("settings")
   const [settings, setSettings] = useState<TestSettings | null>(null)
@@ -42,6 +43,7 @@ export default function TestSessionPage() {
     const durationSeconds = Math.round((Date.now() - startTimeRef.current) / 1000)
     const attempt = buildAttempt({
       categoryId: category!.id,
+      testId: test!.id,
       mode: settings!.mode,
       timerScope: settings!.timerScope,
       durationSeconds,
@@ -92,10 +94,10 @@ export default function TestSessionPage() {
     active: wholeExamActive,
   })
 
-  if (!category) {
+  if (!category || !test) {
     return (
       <div className="text-center">
-        <p className="text-neutral-500 dark:text-neutral-400">קטגוריה לא נמצאה.</p>
+        <p className="text-neutral-500 dark:text-neutral-400">המבחן לא נמצא.</p>
         <Button className="mt-4" onClick={() => navigate("/")}>
           לדף הבית
         </Button>
@@ -104,9 +106,8 @@ export default function TestSessionPage() {
   }
 
   function handleStart(s: TestSettings) {
-    const qs = prepareSessionQuestions(category!.questions, s.questionCount)
     setSettings(s)
-    setSessionQuestions(qs)
+    setSessionQuestions(prepareSessionQuestions(test!.questions))
     setIndex(0)
     setAnswers([])
     setRevealed(false)
@@ -116,7 +117,7 @@ export default function TestSessionPage() {
   }
 
   if (phase === "settings" || !currentQuestion || !settings) {
-    return <TestSettingsPanel category={category} onStart={handleStart} />
+    return <TestSettingsPanel category={category} test={test} onStart={handleStart} />
   }
 
   const isLast = index === sessionQuestions.length - 1

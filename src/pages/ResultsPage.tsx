@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom"
 import type { Attempt } from "../types/history"
 import type { Question } from "../types/question"
-import { getCategory } from "../data/categoryRegistry"
+import { getCategory, getTest } from "../data/categoryRegistry"
 import Button from "../components/ui/Button"
 import ResultsSummary from "../components/results/ResultsSummary"
 import AnswerReview from "../components/results/AnswerReview"
@@ -29,17 +29,23 @@ export default function ResultsPage() {
 
   const { attempt, questions } = state
   const category = getCategory(attempt.categoryId)
+  const test = getTest(attempt.categoryId, attempt.testId)
+  const title = [category?.nameHe ?? attempt.categoryId, test?.nameHe].filter(Boolean).join(" · ")
 
   return (
     <div className="flex flex-col gap-6">
-      <ResultsSummary attempt={attempt} categoryNameHe={category?.nameHe ?? attempt.categoryId} />
+      <ResultsSummary attempt={attempt} categoryNameHe={title} />
 
       <div className="flex gap-3">
-        <Button className="flex-1" onClick={() => navigate(`/test/${attempt.categoryId}`)}>
+        <Button className="flex-1" onClick={() => navigate(`/test/${attempt.categoryId}/${attempt.testId}`)}>
           נסה שוב
         </Button>
-        <Button variant="secondary" className="flex-1" onClick={() => navigate("/")}>
-          לדף הבית
+        <Button
+          variant="secondary"
+          className="flex-1"
+          onClick={() => navigate(`/category/${attempt.categoryId}`)}
+        >
+          לרשימת המבחנים
         </Button>
       </div>
 

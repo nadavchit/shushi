@@ -12,7 +12,7 @@ export default function AppShell() {
             to="/"
             className="rounded-lg text-lg font-semibold tracking-tight focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-400"
           >
-            אימון שח״קים
+            אימון שחקים
           </Link>
           <Link
             to="/history"

@@ -1,6 +1,36 @@
-import type { TestCategory } from "../types/category"
+import type { FixedTest, TestCategory } from "../types/category"
+import type { Question } from "../types/question"
 import { generalKnowledgeQuestions } from "./categories/generalKnowledge"
+import { generalKnowledgeGenerated } from "./categories/generalKnowledgeGenerated"
 import { remoteAssociationsQuestions } from "./categories/remoteAssociations"
+import { remoteAssociationsGenerated } from "./categories/remoteAssociationsGenerated"
+
+function buildTests(prefix: string, pool: Question[], perTest: number, startIndex = 1): FixedTest[] {
+  const tests: FixedTest[] = []
+  for (let i = 0; i < pool.length; i += perTest) {
+    const number = startIndex + tests.length
+    tests.push({
+      id: `${prefix}-${number}`,
+      nameHe: `מבחן ${number}`,
+      questions: pool.slice(i, i + perTest),
+    })
+  }
+  return tests
+}
+
+const gkOriginalTests = buildTests("gk-test", generalKnowledgeQuestions, 19)
+const gkGeneratedTests = generalKnowledgeGenerated.map((questions, i) => ({
+  id: `gk-test-${gkOriginalTests.length + i + 1}`,
+  nameHe: `מבחן ${gkOriginalTests.length + i + 1}`,
+  questions,
+}))
+
+const ratOriginalTests = buildTests("rat-test", remoteAssociationsQuestions, 20)
+const ratGeneratedTests = remoteAssociationsGenerated.map((questions, i) => ({
+  id: `rat-test-${ratOriginalTests.length + i + 1}`,
+  nameHe: `מבחן ${ratOriginalTests.length + i + 1}`,
+  questions,
+}))
 
 export const categoryRegistry: TestCategory[] = [
   {
@@ -8,17 +38,21 @@ export const categoryRegistry: TestCategory[] = [
     nameHe: "ידע כללי",
     descriptionHe: "שאלות רב-ברירה במגוון תחומים: היסטוריה, גיאוגרפיה, תרבות ועוד.",
     defaultPerQuestionSec: 20,
-    questions: generalKnowledgeQuestions,
+    tests: [...gkOriginalTests, ...gkGeneratedTests],
   },
   {
     id: "remote-associations",
     nameHe: "הקשרים רחוקים",
     descriptionHe: "שלוש מילים, מילה אחת מקשרת ביניהן. מצאו אותה.",
     defaultPerQuestionSec: 30,
-    questions: remoteAssociationsQuestions,
+    tests: [...ratOriginalTests, ...ratGeneratedTests],
   },
 ]
 
 export function getCategory(id: string): TestCategory | undefined {
   return categoryRegistry.find((c) => c.id === id)
+}
+
+export function getTest(categoryId: string, testId: string): FixedTest | undefined {
+  return getCategory(categoryId)?.tests.find((t) => t.id === testId)
 }

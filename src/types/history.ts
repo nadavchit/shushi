@@ -10,6 +10,7 @@ export interface AnswerRecord {
 export interface Attempt {
   id: string
   categoryId: string
+  testId: string
   dateISO: string
   mode: TestMode
   timerScope?: TimerScope

@@ -12,8 +12,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.png', 'icons/apple-touch-icon.png'],
       manifest: {
-        name: 'אימון שח״קים',
-        short_name: 'שח״קים',
+        name: 'אימון שחקים',
+        short_name: 'שחקים',
         description: 'תרגול לקראת מבחני קבלה ליחידות מודיעין עילית',
         lang: 'he',
         dir: 'rtl',

@@ -7,7 +7,6 @@ function shuffleMCOptions(question: MCQuestion): MCQuestion {
   return { ...question, options, correctIndex: options.indexOf(correctText) }
 }
 
-export function prepareSessionQuestions(pool: Question[], count: number): Question[] {
-  const picked = shuffle(pool).slice(0, count)
-  return picked.map((q) => (q.type === "multiple-choice" ? shuffleMCOptions(q) : q))
+export function prepareSessionQuestions(questions: Question[]): Question[] {
+  return questions.map((q) => (q.type === "multiple-choice" ? shuffleMCOptions(q) : q))
 }

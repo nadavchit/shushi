@@ -1,10 +1,11 @@
 import { useState } from "react"
-import type { TestCategory, TestMode, TestSettings, TimerScope } from "../../types/category"
+import type { FixedTest, TestCategory, TestMode, TestSettings, TimerScope } from "../../types/category"
 import Button from "../ui/Button"
 import Card from "../ui/Card"
 
 interface TestSettingsPanelProps {
   category: TestCategory
+  test: FixedTest
   onStart: (settings: TestSettings) => void
 }
 
@@ -48,23 +49,21 @@ function nearestOption(options: number[], value: number): number {
   return options.reduce((prev, curr) => (Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev))
 }
 
-export default function TestSettingsPanel({ category, onStart }: TestSettingsPanelProps) {
-  const total = category.questions.length
-  const countOptions = [10, 20, total].filter((n, i, arr) => n <= total && n > 0 && arr.indexOf(n) === i)
-
+export default function TestSettingsPanel({ category, test, onStart }: TestSettingsPanelProps) {
   const [mode, setMode] = useState<TestMode>("timed")
   const [timerScope, setTimerScope] = useState<TimerScope>("per-question")
   const [perQuestionSeconds, setPerQuestionSeconds] = useState(
     nearestOption(PER_QUESTION_OPTIONS, category.defaultPerQuestionSec),
   )
-  const [questionCount, setQuestionCount] = useState(countOptions.includes(20) ? 20 : countOptions[0])
   const [totalMinutes, setTotalMinutes] = useState(
-    nearestOption(TOTAL_MINUTE_OPTIONS, Math.round((category.defaultPerQuestionSec * questionCount) / 60)),
+    nearestOption(
+      TOTAL_MINUTE_OPTIONS,
+      Math.round((category.defaultPerQuestionSec * test.questions.length) / 60),
+    ),
   )
 
   function handleStart() {
     onStart({
-      questionCount,
       mode,
       timerScope: mode === "timed" ? timerScope : undefined,
       perQuestionSeconds: mode === "timed" && timerScope === "per-question" ? perQuestionSeconds : undefined,
@@ -75,8 +74,12 @@ export default function TestSettingsPanel({ category, onStart }: TestSettingsPan
   return (
     <Card className="flex flex-col gap-6">
       <div>
-        <h1 className="text-xl font-bold">{category.nameHe}</h1>
-        <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">{category.descriptionHe}</p>
+        <h1 className="text-xl font-bold">
+          {category.nameHe} · {test.nameHe}
+        </h1>
+        <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
+          {test.questions.length} שאלות קבועות
+        </p>
       </div>
 
       <SettingsRow label="מצב מבחן">
@@ -118,14 +121,6 @@ export default function TestSettingsPanel({ category, onStart }: TestSettingsPan
           ))}
         </SettingsRow>
       )}
-
-      <SettingsRow label="מספר שאלות">
-        {countOptions.map((n) => (
-          <OptionPill key={n} active={questionCount === n} onClick={() => setQuestionCount(n)}>
-            {n === total ? `הכל (${total})` : n}
-          </OptionPill>
-        ))}
-      </SettingsRow>
 
       {mode === "practice" ? (
         <p className="text-xs text-neutral-400 dark:text-neutral-500">
