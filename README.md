@@ -1,32 +1,64 @@
-# React + TypeScript + Vite
+# אימון שחקים — Shchakim Practice
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A personal-use practice app for IDF elite intelligence program ("שח״קים") admissions tests.
+Hebrew/RTL, mobile-first, installable as a PWA, and fully offline-capable.
 
-Currently, two official plugins are available:
+**Live:** https://shushi-psi.vercel.app
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Test categories
 
-## React Compiler
+| Category | Tests | Questions |
+| --- | --- | --- |
+| ידע כללי (general knowledge, multiple choice) | 9 | 174 |
+| הקשרים רחוקים (remote associates) | 4 | 80 |
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Each category holds a fixed, numbered list of tests so results are comparable across
+attempts. Tests are labelled by origin:
 
-## Expanding the Oxlint configuration
+- **מהלומדה** — built from the original source material.
+- **נוצר אוטומטית** — written to add practice volume in the same style. Lower confidence
+  than the source material; worth reviewing before relying on them.
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+## Test modes
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+- **מתוזמן (timed)** — feedback is withheld until the end, like the real exam. The timer is
+  scoped either per-question (15/20/30/45/60s, auto-advances on expiry) or across the whole
+  exam (5–30 min, auto-submits on expiry).
+- **תרגול חופשי (practice)** — untimed; each answer reveals the correct answer plus a short
+  explanation immediately.
+
+Both converge on the same results screen: score, duration, and a per-question review with
+explanations. Attempts are saved per-device in `localStorage` — no account, no server.
+
+## Development
+
+```bash
+npm install
+npm run dev      # dev server
+npm run build    # production build (service worker only registers in a built app)
+npm run preview  # serve the production build locally
+npm run smoke    # Playwright end-to-end check (see below)
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+`npm run smoke` drives a real browser through both categories, all three timer
+configurations, results, and history. Point it at any deployment:
+
+```bash
+BASE_URL=https://shushi-psi.vercel.app npm run smoke
+node scripts/check-installable.mjs   # verifies PWA install criteria on the live site
+```
+
+## Adding a test category
+
+The engine renders any question type off a discriminated union, so a new category needs no
+changes to the session logic:
+
+1. Add a variant to `Question` in `src/types/question.ts`.
+2. Add a renderer and branch in `src/components/test/QuestionRenderer.tsx`.
+3. Add the question data under `src/data/categories/`.
+4. Register the category in `src/data/categoryRegistry.ts`.
+
+## Deployment
+
+Hosted free on Vercel; pushes to `master` deploy automatically. `vercel.json` rewrites all
+paths to `index.html` so client-side routes survive a hard refresh.
