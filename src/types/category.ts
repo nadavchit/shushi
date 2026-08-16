@@ -1,8 +1,12 @@
 import type { Question } from './question'
 
+/** 'lomda' = taken from Nadav's original source material; 'generated' = written for extra practice. */
+export type TestSource = 'lomda' | 'generated'
+
 export interface FixedTest {
   id: string
   nameHe: string
+  source: TestSource
   questions: Question[]
 }
 

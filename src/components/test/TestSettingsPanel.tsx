@@ -2,6 +2,7 @@ import { useState } from "react"
 import type { FixedTest, TestCategory, TestMode, TestSettings, TimerScope } from "../../types/category"
 import Button from "../ui/Button"
 import Card from "../ui/Card"
+import SourceBadge from "../ui/SourceBadge"
 
 interface TestSettingsPanelProps {
   category: TestCategory
@@ -74,9 +75,12 @@ export default function TestSettingsPanel({ category, test, onStart }: TestSetti
   return (
     <Card className="flex flex-col gap-6">
       <div>
-        <h1 className="text-xl font-bold">
-          {category.nameHe} · {test.nameHe}
-        </h1>
+        <div className="flex flex-wrap items-center gap-2">
+          <h1 className="text-xl font-bold">
+            {category.nameHe} · {test.nameHe}
+          </h1>
+          <SourceBadge source={test.source} />
+        </div>
         <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
           {test.questions.length} שאלות קבועות
         </p>

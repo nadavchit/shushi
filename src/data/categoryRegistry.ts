@@ -12,6 +12,7 @@ function buildTests(prefix: string, pool: Question[], perTest: number, startInde
     tests.push({
       id: `${prefix}-${number}`,
       nameHe: `מבחן ${number}`,
+      source: "lomda",
       questions: pool.slice(i, i + perTest),
     })
   }
@@ -19,16 +20,18 @@ function buildTests(prefix: string, pool: Question[], perTest: number, startInde
 }
 
 const gkOriginalTests = buildTests("gk-test", generalKnowledgeQuestions, 19)
-const gkGeneratedTests = generalKnowledgeGenerated.map((questions, i) => ({
+const gkGeneratedTests: FixedTest[] = generalKnowledgeGenerated.map((questions, i) => ({
   id: `gk-test-${gkOriginalTests.length + i + 1}`,
   nameHe: `מבחן ${gkOriginalTests.length + i + 1}`,
+  source: "generated",
   questions,
 }))
 
 const ratOriginalTests = buildTests("rat-test", remoteAssociationsQuestions, 20)
-const ratGeneratedTests = remoteAssociationsGenerated.map((questions, i) => ({
+const ratGeneratedTests: FixedTest[] = remoteAssociationsGenerated.map((questions, i) => ({
   id: `rat-test-${ratOriginalTests.length + i + 1}`,
   nameHe: `מבחן ${ratOriginalTests.length + i + 1}`,
+  source: "generated",
   questions,
 }))
 

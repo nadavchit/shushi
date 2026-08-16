@@ -39,6 +39,10 @@ try {
   const gkTestCount = await gkTestLinks.count()
   assert(gkTestCount === 9, `general knowledge lists 9 fixed tests (found ${gkTestCount})`)
   await waitForText(page, "טרם נוסה", "untried tests show 'not yet attempted'")
+  const lomdaCount = await page.getByText("מהלומדה").count()
+  const generatedCount = await page.getByText("נוצר אוטומטית").count()
+  assert(lomdaCount === 6, `6 tests labelled "מהלומדה" (found ${lomdaCount})`)
+  assert(generatedCount === 3, `3 tests labelled "נוצר אוטומטית" (found ${generatedCount})`)
   await page.screenshot({ path: `${SHOT_DIR}/02-category-tests.png` })
 
   console.log("\n[3] General knowledge - timed per-question mode")
